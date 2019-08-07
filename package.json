@@ -1,0 +1,19 @@
+{
+  "name": "csv-to-xml",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/md1guy/csv-to-xml.git"
+  },
+  "author": "metyslav",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/md1guy/csv-to-xml/issues"
+  },
+  "homepage": "https://github.com/md1guy/csv-to-xml#readme"
+}
