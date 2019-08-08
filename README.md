@@ -21,7 +21,7 @@ $ node app <file_name> <xml_key> <first_index> <number_of_results>
 | <first_index>       | number of starting row in dump file; counting starts from zero.                                 |
 | <number_of_results> | number of rows that will be processed.                                                          |
 
-After succesful execution of the script generated XML will be displayed as terminal output and saved into `./output.xml` file.
+After successful execution of the script generated XML will be displayed as terminal output and saved into `./output.xml` file.
 
 ![terminal output](https://image.prntscr.com/image/IZleOzE1RY6Oo9tFK6k65g.png 'terminal output')
 
