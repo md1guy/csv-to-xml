@@ -27,17 +27,17 @@ const parseCsv = csvString => {
 };
 
 const objectToXmlString = (xmlKey, obj) =>
-    `<${xmlKey} ${Reflect.ownKeys(obj).reduce(
+    Reflect.ownKeys(obj).reduce(
         (acc, key) => `${acc}${key.replace(/["]/g, '')}="${obj[key]}" `,
-        '',
-    )}/>`;
+        `<${xmlKey} `,
+    ) + '/>';
 
-const logArgcError = _ =>
+const logArgcError = () =>
     console.log(
         `Command line arguments count error.\nUsage: node app.js <filename.csv> <xmlKey> <first result index> <number of results>`,
     );
 
-const parseArgv = _ => ({
+const parseArgv = () => ({
     csvFileName: process.argv[2].toString(),
     xmlKey: process.argv[3].toString(),
     resultIndex: parseFloat(process.argv[4]),
