@@ -29,6 +29,7 @@ const parseCsv = csvString => {
 const objectToXmlString = (xmlKey, obj) =>
     `<${xmlKey} ${Reflect.ownKeys(obj).reduce(
         (acc, key) => `${acc}${key.replace(/["]/g, '')}="${obj[key]}" `,
+        '',
     )}/>`;
 
 const logArgcError = _ =>
