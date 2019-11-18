@@ -1,6 +1,6 @@
 # csv-to-xml
 
-Script for converting pgAdmin CSV dumps into DbUtils XML.
+Tool for converting pgAdmin CSV dumps into DbUtils XML.
 
 ### Usage
 
