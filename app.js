@@ -64,14 +64,16 @@ const renameFile = (oldName, newName) => {
 (function() {
     if (process.argv.length !== 6) return logArgcError();
 
+    const dataDirectory = 'data/';
+    const outputDirectory = 'output/';
+    const outputFileName = outputDirectory + 'output.xml';
     const { csvFileName, xmlKey, resultIndex, resultsNumber } = parseArgv();
-    const csvString = fs.readFileSync(csvFileName).toString();
+    const csvString = fs.readFileSync(dataDirectory + csvFileName).toString();
     const csvObjects = parseCsv(csvString);
     const xmlArray = buildXmlArrayString(resultIndex, resultsNumber, csvObjects, xmlKey);
-    const fileName = 'output.xml';
 
-    fs.appendFileSync(fileName, xmlArray);
-    if (getFileSizeInMB(fileName) >= 1) renameFile(fileName, Date.now() + '.xml');
+    fs.appendFileSync(outputFileName, xmlArray);
+    if (getFileSizeInMB(outputFileName) >= 1) renameFile(outputFileName, Date.now() + '.xml');
 
     console.log(xmlArray);
 })();
