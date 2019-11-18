@@ -18,8 +18,8 @@ $ node app <file_name> <xml_key> <first_index> <number_of_results>
 | ------------------- | ----------------------------------------------------------------------------------------------- |
 | <file_name>         | name of the dump file, e.g. `data.csv`                                                          |
 | <xml_key>           | name of the database table, e.g. `user_project`. Generated xml objects will have this as a key. |
-| <first_index>       | number of starting row in dump file; counting starts from zero.                                 |
-| <number_of_results> | number of rows that will be processed.                                                          |
+| <first_index>       | Optional number of starting row in dump file; default value is `0`.                             |
+| <number_of_results> | Optional number of rows that will be processed; <first_index> is required to use this argument. |
 
 After succesful execution of the script generated XML will be displayed as terminal output and saved into `./output.xml` file.
 
