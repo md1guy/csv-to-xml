@@ -21,7 +21,7 @@ $ node app <file_name> <xml_key> <first_index> <number_of_results>
 | <first_index>       | Optional number of starting row in dump file; default value is `0`.                             |
 | <number_of_results> | Optional number of rows that will be processed; <first_index> is required to use this argument. |
 
-After succesful execution of the script generated XML will be displayed as terminal output and saved into `./output.xml` file.
+After successful execution of the script generated XML will be displayed as terminal output and saved into `./output.xml` file.
 
 ![terminal output](https://image.prntscr.com/image/IZleOzE1RY6Oo9tFK6k65g.png 'terminal output')
 
