@@ -4,7 +4,7 @@ Script for converting pgAdmin CSV dumps into DbUtils XML.
 
 ### Usage
 
-1. Download `.csv` dump from pgAdmin and save it into script directory:
+1. Download `.csv` dump from pgAdmin and save it into 'data' directory:
    ![pgAdmin save as CSV](https://image.prntscr.com/image/t4AFYGlBSHCr52ubyWgGWQ.png 'pgAdmin save as CSV')
 2. Execute following command from script directory(cmd/linux shell):
 
