@@ -47,13 +47,11 @@ const parseArgv = () => ({
     resultsNumber: parseFloat(process.argv[5]),
 });
 
-const buildXmlArrayString = (resultIndex, resultsNumber, csvObjects, xmlKey) => {
-    console.log(`${resultIndex} ${resultsNumber}`);
-
-    return csvObjects
+const buildXmlArrayString = (resultIndex, resultsNumber, csvObjects, xmlKey) =>
+    csvObjects
         .slice(resultIndex, resultIndex + resultsNumber)
         .reduce((acc, value) => `${acc}${objectToXmlString(xmlKey, value)} \n\n`, '');
-};
+
 const getFileSizeInMB = fileName => {
     const stats = fs.statSync(fileName);
     const fileSizeInBytes = stats.size;
