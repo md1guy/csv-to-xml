@@ -6,22 +6,25 @@ const parseCsv = csvString => {
     const headers = rawHeaders.split(',');
     csvRows.shift();
 
-    const csvObjects = csvRows.map(e => {
-        let csvObject = {};
+    const csvObjects = csvRows
+        .filter(row => row !== '\n')
+        .map(row => {
+            let csvObject = {};
 
-        const nullRegex = /NULL/;
+            const nullRegex = /NULL/;
 
-        e.split(',').forEach((e, i) => {
-            nullRegex.test(e)
-                ? null
-                : (csvObject[headers[i]] = e
-                      .replace(/"/g, '')
-                      .replace('False', 'false')
-                      .trim());
+            row.split(',').forEach((key, index) => {
+                nullRegex.test(key)
+                    ? null
+                    : (csvObject[headers[index]] = key
+                          .replace(/"/g, '')
+                          .replace('False', 'false')
+                          .replace('True', 'true')
+                          .trim());
+            });
+
+            return csvObject;
         });
-
-        return csvObject;
-    });
 
     return csvObjects;
 };
@@ -44,11 +47,13 @@ const parseArgv = () => ({
     resultsNumber: parseFloat(process.argv[5]),
 });
 
-const buildXmlArrayString = (resultIndex, resultsNumber, csvObjects, xmlKey) =>
-    csvObjects
+const buildXmlArrayString = (resultIndex, resultsNumber, csvObjects, xmlKey) => {
+    console.log(`${resultIndex} ${resultsNumber}`);
+
+    return csvObjects
         .slice(resultIndex, resultIndex + resultsNumber)
         .reduce((acc, value) => `${acc}${objectToXmlString(xmlKey, value)} \n\n`, '');
-
+};
 const getFileSizeInMB = fileName => {
     const stats = fs.statSync(fileName);
     const fileSizeInBytes = stats.size;
@@ -62,7 +67,7 @@ const renameFile = (oldName, newName) => {
 };
 
 (function() {
-    if (process.argv.length !== 6) return logArgcError();
+    if (process.argv.length < 4) return logArgcError();
 
     const dataDirectory = 'data/';
     const outputDirectory = 'output/';
@@ -70,7 +75,13 @@ const renameFile = (oldName, newName) => {
     const { csvFileName, xmlKey, resultIndex, resultsNumber } = parseArgv();
     const csvString = fs.readFileSync(dataDirectory + csvFileName).toString();
     const csvObjects = parseCsv(csvString);
-    const xmlArray = buildXmlArrayString(resultIndex, resultsNumber, csvObjects, xmlKey);
+
+    const xmlArray = buildXmlArrayString(
+        resultIndex ? resultIndex : 0,
+        resultsNumber ? resultsNumber : csvObjects.length,
+        csvObjects,
+        xmlKey,
+    );
 
     fs.appendFileSync(outputFileName, xmlArray);
     if (getFileSizeInMB(outputFileName) >= 1) renameFile(outputFileName, Date.now() + '.xml');
