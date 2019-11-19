@@ -12,19 +12,21 @@ const parseCsv = csvString => {
             let csvObject = {};
 
             const nullRegex = /NULL/;
+            const csvValueRegex = /(?<=")[^"]+?(?="(?:\s*?,|\s*?$))|(?<=(?:^|,)\s*?)(?:[^,"\s][^,"]*[^,"\s])|(?:[^,"\s])(?![^"]*?"(?:\s*?,|\s*?$))(?=\s*?(?:,|$))|(,"")|("",)|(,"",)/g;
+            const emptyStringRegex = /(,"")|("",)|(,"",)/;
 
-            row.match(
-                /(?<=")[^"]+?(?="(?:\s*?,|\s*?$))|(?<=(?:^|,)\s*?)(?:[^,"\s][^,"]*[^,"\s])|(?:[^,"\s])(?![^"]*?"(?:\s*?,|\s*?$))(?=\s*?(?:,|$))/g,
-            ).forEach((key, index) => {
-                nullRegex.test(key)
-                    ? null
-                    : (csvObject[headers[index]] = escapeCharacters(
-                          key
-                              .replace(/"/g, '')
-                              .replace('False', 'false')
-                              .replace('True', 'true')
-                              .trim(),
-                      ));
+            row.match(csvValueRegex).forEach((key, index) => {
+                if (emptyStringRegex.test(key)) {
+                    csvObject[headers[index]] = '';
+                } else if (!nullRegex.test(key)) {
+                    csvObject[headers[index]] = escapeCharacters(
+                        key
+                            .replace(/"/g, '')
+                            .replace('False', 'false')
+                            .replace('True', 'true')
+                            .trim(),
+                    );
+                }
             });
 
             return csvObject;
