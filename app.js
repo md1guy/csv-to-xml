@@ -13,15 +13,17 @@ const parseCsv = csvString => {
 
             const nullRegex = /NULL/;
 
-            row.split(',').forEach((key, index) => {
+            row.split(',').forEach((key, index) =>
                 nullRegex.test(key)
                     ? null
-                    : (csvObject[headers[index]] = key
-                          .replace(/"/g, '')
-                          .replace('False', 'false')
-                          .replace('True', 'true')
-                          .trim());
-            });
+                    : (csvObject[headers[index]] = escapeCharacters(
+                          key
+                              .replace(/"/g, '')
+                              .replace('False', 'false')
+                              .replace('True', 'true')
+                              .trim(),
+                      )),
+            );
 
             return csvObject;
         });
@@ -29,10 +31,18 @@ const parseCsv = csvString => {
     return csvObjects;
 };
 
+const escapeCharacters = str =>
+    str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&apos;')
+        .replace(/"/g, '&quot;');
+
 const objectToXmlString = (xmlKey, obj) =>
     Reflect.ownKeys(obj).reduce(
-        (acc, key) => `${acc}${key.replace(/["]/g, '')}="${obj[key]}" `,
-        `<${xmlKey} `,
+        (acc, key) => `${acc} ${key.replace(/["]/g, '')}="${obj[key]}"`,
+        `<${xmlKey}`,
     ) + '/>';
 
 const logArgcError = () =>
