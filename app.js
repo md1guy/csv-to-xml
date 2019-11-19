@@ -13,7 +13,9 @@ const parseCsv = csvString => {
 
             const nullRegex = /NULL/;
 
-            row.split(',').forEach((key, index) =>
+            row.match(
+                /(?<=")[^"]+?(?="(?:\s*?,|\s*?$))|(?<=(?:^|,)\s*?)(?:[^,"\s][^,"]*[^,"\s])|(?:[^,"\s])(?![^"]*?"(?:\s*?,|\s*?$))(?=\s*?(?:,|$))/g,
+            ).forEach((key, index) => {
                 nullRegex.test(key)
                     ? null
                     : (csvObject[headers[index]] = escapeCharacters(
@@ -22,8 +24,8 @@ const parseCsv = csvString => {
                               .replace('False', 'false')
                               .replace('True', 'true')
                               .trim(),
-                      )),
-            );
+                      ));
+            });
 
             return csvObject;
         });
@@ -46,20 +48,11 @@ const objectToXmlString = (xmlKey, obj) =>
     ) + '/>';
 
 const logArgcError = () =>
-    console.log(
-        `Command line arguments count error.\nUsage: node app.js <filename.csv> <xmlKey> <first result index> <number of results>`,
-    );
+    console.log(`Command line arguments count error.\nUsage: node app.js <filename.csv>`);
 
-const parseArgv = () => ({
-    csvFileName: process.argv[2].toString(),
-    xmlKey: process.argv[3].toString(),
-    resultIndex: parseFloat(process.argv[4]),
-    resultsNumber: parseFloat(process.argv[5]),
-});
-
-const buildXmlArrayString = (resultIndex, resultsNumber, csvObjects, xmlKey) =>
+const buildXmlArrayString = (csvObjects, xmlKey) =>
     csvObjects
-        .slice(resultIndex, resultIndex + resultsNumber)
+        .slice(0, csvObjects.length)
         .reduce((acc, value) => `${acc}${objectToXmlString(xmlKey, value)} \n\n`, '');
 
 const getFileSizeInMB = fileName => {
@@ -75,21 +68,15 @@ const renameFile = (oldName, newName) => {
 };
 
 (function() {
-    if (process.argv.length < 4) return logArgcError();
+    if (process.argv.length < 1) return logArgcError();
 
     const dataDirectory = 'data/';
     const outputDirectory = 'output/';
     const outputFileName = outputDirectory + 'output.xml';
-    const { csvFileName, xmlKey, resultIndex, resultsNumber } = parseArgv();
-    const csvString = fs.readFileSync(dataDirectory + csvFileName).toString();
+    const csvFileName = process.argv[2].toString();
+    const csvString = fs.readFileSync(dataDirectory + csvFileName + '.csv').toString();
     const csvObjects = parseCsv(csvString);
-
-    const xmlArray = buildXmlArrayString(
-        resultIndex ? resultIndex : 0,
-        resultsNumber ? resultsNumber : csvObjects.length,
-        csvObjects,
-        xmlKey,
-    );
+    const xmlArray = buildXmlArrayString(csvObjects, csvFileName);
 
     fs.appendFileSync(outputFileName, xmlArray);
     if (getFileSizeInMB(outputFileName) >= 1) renameFile(outputFileName, Date.now() + '.xml');
