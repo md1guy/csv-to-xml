@@ -18,7 +18,7 @@ const parseCsv = csvString => {
             row.match(csvValueRegex).forEach((key, index) => {
                 if (emptyStringRegex.test(key)) {
                     csvObject[headers[index]] = '';
-                } else if (!nullRegex.test(key)) {
+                } else if (!nullRegex.test(key) && key !== 'binary data') {
                     csvObject[headers[index]] = escapeCharacters(
                         key
                             .replace(/"/g, '')
